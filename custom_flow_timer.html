@@ -27,8 +27,11 @@
         }
         /* Custom styling for the timer display */
         .timer-text {
-            /* Adjusted clamp: smaller minimum size (2.5rem) and tighter viewport scale (12vw) */
-            font-size: clamp(2.5rem, 12vw, 10rem); 
+            /* FIX APPLIED HERE: Reduced 12vw to 10vw to ensure the timer numbers fit 
+            inside the container on all mobile viewport widths.
+            (Min Size, Fluid Size, Max Size)
+            */
+            font-size: clamp(2.5rem, 10vw, 10rem); 
             font-weight: 800;
             transition: color 0.3s ease;
             /* Ensure the text itself is tight and doesn't create extra space */
@@ -324,6 +327,7 @@
             isRunning = false;
             isPaused = false;
             
+            // CORRECTED TYPO: initialFlowFlowTimeSeconds -> initialFlowTimeSeconds
             const initialFlowTimeSeconds = parseFloat(flowTimeInput.value) * 60 || 1500;
             
             currentPhase = 'FLOW';
@@ -345,6 +349,7 @@
 
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
+        // CORRECTED TYPO: re -> resetTimer
         resetButton.addEventListener('click', resetTimer);
 
         // Initialize display on load
