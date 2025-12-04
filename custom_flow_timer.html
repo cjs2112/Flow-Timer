@@ -27,15 +27,15 @@
         }
         /* Custom styling for the timer display */
         .timer-text {
-            /* FIX APPLIED HERE: Reduced 12vw to 10vw to ensure the timer numbers fit 
-            inside the container on all mobile viewport widths.
-            (Min Size, Fluid Size, Max Size)
-            */
-            font-size: clamp(5rem, 15vw, 15rem); 
+            font-size: clamp(2.5rem, 6vw, 10rem); 
             font-weight: 800;
             transition: color 0.3s ease;
-            /* Ensure the text itself is tight and doesn't create extra space */
             line-height: 1.1; 
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block; 
+            width: 100%; 
         }
         .time-input {
             width: 100%;
@@ -44,8 +44,28 @@
             -moz-appearance: textfield;
             border: 2px solid transparent;
             background-color: #161b22;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem; /* text-lg */
         }
         .time-input:focus {
+            border-color: #38bdf8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
+        }
+        .playback-select {
+            background-color: #161b22;
+            border: 2px solid transparent;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            font-size: 1.125rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+        .playback-select:focus {
             border-color: #38bdf8;
             outline: none;
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
@@ -56,7 +76,6 @@
 </head>
 <body>
 
-    <!-- UPDATED: Changed max-w-xl to max-w-md for better mobile fit -->
     <div id="app" class="w-full max-w-md bg-[#161b22] p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-700">
         <h1 class="text-3xl font-bold text-center mb-5 text-fuchsia-400">Flow State Timer</h1>
 
@@ -68,37 +87,52 @@
                 <!-- Flow Time Input -->
                 <div>
                     <label for="flowTime" class="block text-sm font-medium text-gray-400">Flow Time (Minutes)</label>
-                    <input type="number" id="flowTime" value="25" min="1" max="180" class="time-input mt-1 p-2 rounded-lg text-lg text-white">
+                    <input type="number" id="flowTime" value="25" min="1" max="180" class="time-input mt-1">
                 </div>
 
                 <!-- Short Break Time Input -->
                 <div>
                     <label for="breakTime" class="block text-sm font-medium text-gray-400">Short Break Time (Minutes)</label>
-                    <input type="number" id="breakTime" value="5" step="1" min="1" max="30" class="time-input mt-1 p-2 rounded-lg text-lg text-white">
+                    <input type="number" id="breakTime" value="5" step="1" min="1" max="30" class="time-input mt-1">
                 </div>
             </div>
 
             <h2 class="text-xl font-semibold pt-4 mb-3 text-gray-300">Sound Customization</h2>
-            <p class="text-sm text-gray-500">Customize the sound frequency (Hz) for each phase change.</p>
+            <p class="text-sm text-gray-500">Customize the sound frequency (Hz) for each phase change and the background music speed.</p>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <label for="playbackSpeed" class="block text-sm font-medium text-gray-400">Playback Speed</label>
+                    <select id="playbackSpeed" class="playback-select mt-1">
+                        <option value="50">50%</option>
+                        <option value="75">75%</option>
+                        <option value="100" selected>100%</option>
+                        <option value="125">125%</option>
+                        <option value="150">150%</option>
+                    </select>
+                </div>
                 <div class="text-center">
                     <label for="flowFreq" class="block text-sm font-medium text-gray-400">Flow Start (Hz)</label>
-                    <input type="number" id="flowFreq" value="600" min="100" max="1000" class="time-input mt-1 p-2 rounded-lg text-lg text-white">
+                    <input type="number" id="flowFreq" value="600" min="100" max="1000" class="time-input mt-1">
                 </div>
                 <div class="text-center">
                     <label for="breakFreq" class="block text-sm font-medium text-gray-400">Break Start (Hz)</label>
-                    <input type="number" id="breakFreq" value="400" min="100" max="1000" class="time-input mt-1 p-2 rounded-lg text-lg text-white">
+                    <input type="number" id="breakFreq" value="400" min="100" max="1000" class="time-input mt-1">
                 </div>
                 <div class="text-center">
                     <label for="endFreq" class="block text-sm font-medium text-gray-400">Final Countdown (Hz)</label>
-                    <input type="number" id="endFreq" value="800" min="100" max="1000" class="time-input mt-1 p-2 rounded-lg text-lg text-white">
+                    <input type="number" id="endFreq" value="800" min="100" max="1000" class="time-input mt-1">
                 </div>
+            </div>
+            
+            <div class="flex items-center pt-4">
+                <input type="checkbox" id="musicToggle" checked class="w-4 h-4 text-fuchsia-600 bg-gray-700 border-gray-600 rounded focus:ring-fuchsia-500">
+                <label for="musicToggle" class="ml-2 text-sm font-medium text-gray-300">Play Ambient Music during Flow Time</label>
             </div>
         </div>
 
-        <!-- Timer Display (Padding reduced from p-8 to p-6) -->
-        <div id="timerDisplay" class="text-center bg-[#0d1117] p-6 rounded-xl shadow-inner border border-gray-700">
+        <!-- Timer Display (Padding reduced to p-4 for better mobile fit) -->
+        <div id="timerDisplay" class="text-center bg-[#0d1117] p-4 rounded-xl shadow-inner border border-gray-700">
             <div id="phaseText" class="text-2xl font-semibold mb-2 h-8 text-gray-400">Ready</div>
             <div class="text-lg font-medium text-fuchsia-500 mb-4 h-6 invisible">.</div> 
             <div id="countdown" class="timer-text text-white">00:00</div>
@@ -117,23 +151,15 @@
             </button>
         </div>
         
-        <!-- Message Box -->
-        <div id="messageBox" class="mt-4 p-3 text-center text-sm rounded-lg bg-red-900/50 text-red-300 hidden" role="alert"></div>
-
     </div>
 
     <script>
         // *** Service Worker Registration for PWA functionality ***
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Register the service worker relative to the root of the site
                 navigator.serviceWorker.register('/service-worker.js') 
-                    .then(registration => {
-                        // console.log('Service Worker registered:', registration);
-                    })
-                    .catch(error => {
-                        // console.error('Service Worker registration failed:', error);
-                    });
+                    .then(registration => {})
+                    .catch(error => {});
             });
         }
         
@@ -142,47 +168,152 @@
 
         const flowTimeInput = $('flowTime');
         const breakTimeInput = $('breakTime');
+        const playbackSpeedInput = $('playbackSpeed'); 
         const startButton = $('startButton');
         const pauseButton = $('pauseButton');
         const resetButton = $('resetButton');
         const countdownDisplay = $('countdown');
         const phaseText = $('phaseText');
         const timerDisplay = $('timerDisplay');
-        const messageBox = $('messageBox');
-
+        const musicToggle = $('musicToggle'); 
+        
         let intervalId = null;
         let isPaused = false;
         let isRunning = false;
         let currentTime = 0;
-        let currentPhase = 'FLOW'; // Possible: 'FLOW', 'BREAK', 'PREP'
-
-        // --- TONE.JS AUDIO SETUP ---
-        let synth;
+        let currentPhase = 'FLOW'; 
+        
+        // --- TONE.JS AUDIO STATE ---
+        let synth;   // Alert Beeps (Persistent)
+        let reverb;  // Reverb Effect (Persistent)
+        let filter;  // Low Pass Filter (Persistent)
+        let ambientSynth; // Ambient Music Source (Recreated on speed change)
+        let flowMusic; // Sequence Trigger (Recreated on speed change)
 
         function initializeAudio() {
             if (Tone.context.state !== 'running') {
+                // Ensure audio context is running on user interaction
                 Tone.start();
             }
-            synth = new Tone.FMSynth().toDestination();
+            
+            // --- PERSISTENT AUDIO COMPONENTS (Only create once) ---
+            if (!synth) {
+                 synth = new Tone.FMSynth().toDestination();
+            }
+            if (!reverb) { 
+                // Setup Reverb Effect
+                reverb = new Tone.Reverb({ decay: 12, wet: 0.9 }).toDestination(); // Wetness increased to 0.9
+            }
+            if (!filter) {
+                // Low Pass Filter to smooth out the synth sound into a drone
+                filter = new Tone.Filter(800, 'lowpass').connect(reverb);
+            }
+            
+            // --- DYNAMIC MUSIC COMPONENTS (Recreated on every call) ---
+
+            // 1. Get selected percentage
+            const selectedPercentage = parseFloat(playbackSpeedInput.value);
+            const rateMultiplier = selectedPercentage / 100;
+
+            // Set BPM to scale the SEQUENCE (notes trigger faster/slower)
+            Tone.Transport.bpm.value = 60 * rateMultiplier; 
+            Tone.Transport.playbackRate = 1.0; 
+
+            // 2. Dispose of existing music components to force parameter recalculation
+            if (flowMusic) {
+                flowMusic.dispose(); 
+                flowMusic = null;
+            }
+            if (ambientSynth) {
+                ambientSynth.disconnect(filter); 
+                ambientSynth.dispose();
+                ambientSynth = null;
+            }
+            
+            // 3. --- NEW SYNTH & MANUAL ENVELOPE SCALING ---
+            // Base times in seconds at 100% speed (rateMultiplier = 1.0)
+            const BASE_ATTACK_SECONDS = 5.0; 
+            const BASE_RELEASE_SECONDS = 8.0; 
+
+            // Calculate Scaled Times (Inverse relationship: faster rate means shorter duration)
+            const SCALED_ATTACK_SECONDS = BASE_ATTACK_SECONDS / rateMultiplier;
+            const SCALED_RELEASE_SECONDS = BASE_RELEASE_SECONDS / rateMultiplier;
+            
+            console.log(`--- Audio Initialization ---`);
+            console.log(`Speed Percentage: ${selectedPercentage}%`);
+            console.log(`Calculated Release Time: ${SCALED_RELEASE_SECONDS.toFixed(2)} seconds`); 
+            console.log(`Sequence BPM: ${Tone.Transport.bpm.value.toFixed(2)}`);
+            console.log(`----------------------------`);
+            
+            // 4. Create NEW Ambient Synth using a simpler base synth (Tone.Synth)
+            ambientSynth = new Tone.PolySynth(Tone.Synth, { 
+                volume: 0, // VOLUME BOOSTED to 0dB for maximum audibility
+                options: {
+                    oscillator: { type: "sine" },
+                },
+                envelope: { 
+                    // Set the envelope using the manually calculated, fixed time in seconds
+                    attack: SCALED_ATTACK_SECONDS,      
+                    decay: SCALED_RELEASE_SECONDS * 0.5,
+                    sustain: 0.1,
+                    release: SCALED_RELEASE_SECONDS 
+                }, 
+            }).connect(filter); // Connect through the filter -> reverb -> destination
+            
+            // 5. Create NEW Sequence 
+            const chords = [
+                ["C2", "G2", "C3"], 
+                ["G1", "D2", "G2"], 
+                ["A1", "E2", "A2"], 
+                ["F1", "C2", "F2"]  
+            ];
+
+            // Sequence step ("4m") and note duration ("8m") are scaled by the BPM 
+            flowMusic = new Tone.Sequence((time, chord) => {
+                // The duration here is long, ensuring the envelope (set above in seconds) defines the fade-out
+                ambientSynth.triggerAttackRelease(chord, "8m", time); 
+            }, chords, "4m"); 
+            
+            flowMusic.loop = true;
         }
 
-        // Plays a customizable tone
+        // Plays a customizable tone (for alerts)
         function playTone(frequencyId, duration = 0.5) {
-            if (!synth) return;
+            if (!synth) {
+                 console.log("Tone.js synth not initialized or is null.");
+                 return;
+            }
             const freq = parseFloat($(frequencyId).value);
-            synth.triggerAttackAttackRelease(freq, duration);
+            // Alert synth is loud enough, but ensure its volume isn't 
+            // tied to the ambient music's signal chain.
+            synth.triggerAttackRelease(freq, duration);
         }
 
         // Plays the final end sound (triple high-pitched beep)
         function playEndTone() {
-            if (!synth) return;
+            if (!synth) {
+                console.log("Tone.js synth not initialized or is null.");
+                return;
+            }
             const freq = parseFloat($('endFreq').value);
             const now = Tone.now();
-            synth.triggerAttackAttackRelease(freq, "8n", now);
-            synth.triggerAttackAttackRelease(freq, "8n", now + 0.4);
-            synth.triggerAttackAttackRelease(freq * 1.5, "8n", now + 0.8); // Higher pitch for final
+            synth.triggerAttackRelease(freq, "8n", now);
+            synth.triggerAttackRelease(freq, "8n", now + 0.4);
+            synth.triggerAttackRelease(freq * 1.5, "8n", now + 0.8);
         }
-
+        
+        // Helper function for hard stopping the music (used for Break and Reset)
+        function hardStopFlowMusic() {
+             if (flowMusic) {
+                flowMusic.stop();
+            }
+            if (ambientSynth) {
+                // Must call releaseAll() to stop any currently decaying notes
+                ambientSynth.releaseAll(); 
+            }
+            // Must stop the transport to reset the playhead position
+            Tone.Transport.stop(); 
+        }
 
         // --- UI UTILITIES ---
 
@@ -205,9 +336,6 @@
                 timerDisplay.style.color = '#38bdf8'; // Tailwind sky-400
                 phaseText.textContent = 'SHORT BREAK';
                 phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-sky-400';
-            } else {
-                 // PREP
-                timerDisplay.style.color = '#10b981'; // Tailwind emerald-400
             }
 
             if (currentTime <= 3 && currentTime > 0 && isRunning) {
@@ -220,13 +348,7 @@
         function toggleInputs(disabled) {
             flowTimeInput.disabled = disabled;
             breakTimeInput.disabled = disabled;
-        }
-
-        function showMessage(msg, isError = false) {
-            messageBox.textContent = msg;
-            messageBox.className = `mt-4 p-3 text-center text-sm rounded-lg ${isError ? 'bg-red-900/50 text-red-300' : 'bg-fuchsia-900/50 text-fuchsia-300'}`;
-            messageBox.style.display = 'block';
-            setTimeout(() => { messageBox.style.display = 'none'; }, 5000);
+            playbackSpeedInput.disabled = disabled; // Disable speed input while running
         }
 
 
@@ -235,34 +357,35 @@
         function setPhase(phase) {
             currentPhase = phase;
             
-            // Convert input minutes (float) to seconds
             const flowInSeconds = parseFloat(flowTimeInput.value) * 60;
             const breakInSeconds = parseFloat(breakTimeInput.value) * 60;
 
             if (currentPhase === 'FLOW') {
                 currentTime = flowInSeconds;
                 playTone('flowFreq', 0.8);
+                
+                // Music logic for FLOW:
+                if (musicToggle.checked) {
+                    Tone.Transport.start();
+                    flowMusic.start(0); 
+                }
             } else if (currentPhase === 'BREAK') {
                 currentTime = breakInSeconds;
                 playTone('breakFreq', 0.8);
-            } else if (currentPhase === 'PREP') {
-                 currentTime = 10;
-                 phaseText.textContent = 'GET READY';
-                 phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-emerald-400';
-                 playTone('endFreq', 1.0); // Use a distinct tone for start alert
+                
+                // Music logic for BREAK: Hard stop everything
+                if (musicToggle.checked) {
+                    hardStopFlowMusic(); 
+                }
             }
             updateDisplay();
         }
 
         function nextPhase() {
-            if (currentPhase === 'PREP') {
-                // PREP -> FLOW (Initial transition)
-                setPhase('FLOW');
-            } else if (currentPhase === 'FLOW') {
-                // FLOW -> BREAK
+            // Direct transition: FLOW -> BREAK -> FLOW
+            if (currentPhase === 'FLOW') {
                 setPhase('BREAK');
             } else if (currentPhase === 'BREAK') {
-                // BREAK -> FLOW (Continuous loop)
                 setPhase('FLOW');
             }
         }
@@ -275,7 +398,6 @@
             } else {
                 currentTime--;
                 
-                // Audio cue for last 3 seconds
                 if (currentTime <= 3 && currentTime > 0) {
                     playTone('endFreq', 0.1); 
                 }
@@ -288,23 +410,29 @@
 
         function startTimer() {
             const flowValue = parseFloat(flowTimeInput.value);
-            const breakValue = parseFloat(breakTimeInput.value);
+            const breakValue = parseFloat(parseFloat(breakTimeInput.value));
 
             if (flowValue <= 0 || breakValue <= 0) {
-                showMessage("Please ensure Flow Time and Break Time are greater than zero.", true);
                 return;
             }
             
+            // Initialize audio: This forces the synth to be rebuilt with the new, scaled envelope times (in seconds)
             initializeAudio();
 
             if (!isRunning) {
                 isRunning = true;
                 toggleInputs(true);
-                setPhase('PREP');
+                // Initial Start: Start directly in FLOW phase 
+                setPhase('FLOW'); 
                 intervalId = setInterval(tick, 1000);
             } else if (isPaused) {
                 isPaused = false;
-                showMessage("Timer resumed.", false);
+                
+                // RESUME MUSIC LOGIC:
+                if (currentPhase === 'FLOW' && musicToggle.checked) {
+                    // Resume the global clock. 
+                    Tone.Transport.start(); 
+                }
             }
 
             startButton.disabled = true;
@@ -318,7 +446,16 @@
             pauseButton.disabled = true;
             phaseText.textContent = 'PAUSED';
             phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-red-400';
-            showMessage("Timer paused.", false);
+            
+            // PAUSE MUSIC LOGIC:
+            if (musicToggle.checked && Tone.Transport.state === 'started') {
+                 // Silence notes immediately
+                if (ambientSynth) {
+                    ambientSynth.releaseAll(); 
+                }
+                // Pause the global clock
+                Tone.Transport.pause();
+            }
         }
 
         function resetTimer() {
@@ -327,10 +464,12 @@
             isRunning = false;
             isPaused = false;
             
-            // CORRECTED TYPO: initialFlowFlowTimeSeconds -> initialFlowTimeSeconds
+            // Hard stop music and reset transport state
+            hardStopFlowMusic();
+
             const initialFlowTimeSeconds = parseFloat(flowTimeInput.value) * 60 || 1500;
             
-            currentPhase = 'FLOW';
+            currentPhase = 'FLOW'; 
             currentTime = initialFlowTimeSeconds; 
             
             toggleInputs(false);
@@ -341,21 +480,21 @@
             phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-gray-400';
             countdownDisplay.textContent = formatTime(currentTime);
             
-            showMessage("Timer reset.", false);
+            // Re-initialize audio on reset to ensure correct settings are ready for the next start
+            initializeAudio();
         }
 
 
         // --- EVENT LISTENERS ---
 
+        playbackSpeedInput.addEventListener('change', initializeAudio); // Re-init on speed change
         startButton.addEventListener('click', startTimer);
         pauseButton.addEventListener('click', pauseTimer);
-        // CORRECTED TYPO: re -> resetTimer
         resetButton.addEventListener('click', resetTimer);
 
-        // Initialize display on load
+        // Initialize display and music settings on load
         window.onload = resetTimer; 
 
     </script>
 </body>
 </html>
-
