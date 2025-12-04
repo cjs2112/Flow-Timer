@@ -15,22 +15,29 @@
             font-family: 'Inter', sans-serif;
             background-color: #0d1117;
             color: #ffffff;
+            /* Flex layout helps center content vertically and horizontally */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 1rem;
+            /* IMPORTANT: Ensure no margin/padding is inherited on the body that causes scrolling */
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         /* Custom styling for the timer display */
         .timer-text {
-            font-size: clamp(3rem, 15vw, 10rem);
+            /* Adjusted clamp: smaller minimum size (2.5rem) and tighter viewport scale (12vw) */
+            font-size: clamp(2.5rem, 12vw, 10rem); 
             font-weight: 800;
             transition: color 0.3s ease;
+            /* Ensure the text itself is tight and doesn't create extra space */
+            line-height: 1.1; 
         }
         .time-input {
             width: 100%;
             text-align: center;
-            appearance: textfield; /* Hide arrows on modern browsers */
+            appearance: textfield;
             -moz-appearance: textfield;
             border: 2px solid transparent;
             background-color: #161b22;
@@ -46,11 +53,12 @@
 </head>
 <body>
 
-    <div id="app" class="w-full max-w-xl bg-[#161b22] p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700">
-        <h1 class="text-3xl font-bold text-center mb-6 text-fuchsia-400">Flow State Timer</h1>
+    <!-- UPDATED: Changed max-w-xl to max-w-md for better mobile fit -->
+    <div id="app" class="w-full max-w-md bg-[#161b22] p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-700">
+        <h1 class="text-3xl font-bold text-center mb-5 text-fuchsia-400">Flow State Timer</h1>
 
         <!-- Settings Section -->
-        <div id="settings" class="space-y-4 mb-8">
+        <div id="settings" class="space-y-4 mb-6">
             <h2 class="text-xl font-semibold mb-3 text-gray-300">Session Setup (Minutes)</h2>
 
             <div class="grid grid-cols-2 gap-4">
@@ -86,15 +94,15 @@
             </div>
         </div>
 
-        <!-- Timer Display -->
-        <div id="timerDisplay" class="text-center bg-[#0d1117] p-8 rounded-xl shadow-inner border border-gray-700">
+        <!-- Timer Display (Padding reduced from p-8 to p-6) -->
+        <div id="timerDisplay" class="text-center bg-[#0d1117] p-6 rounded-xl shadow-inner border border-gray-700">
             <div id="phaseText" class="text-2xl font-semibold mb-2 h-8 text-gray-400">Ready</div>
             <div class="text-lg font-medium text-fuchsia-500 mb-4 h-6 invisible">.</div> 
             <div id="countdown" class="timer-text text-white">00:00</div>
         </div>
 
         <!-- Controls -->
-        <div class="flex justify-center space-x-4 mt-8">
+        <div class="flex justify-center space-x-4 mt-6">
             <button id="startButton" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-md transition duration-200 disabled:opacity-50">
                 Start
             </button>
@@ -159,7 +167,7 @@
         function playTone(frequencyId, duration = 0.5) {
             if (!synth) return;
             const freq = parseFloat($(frequencyId).value);
-            synth.triggerAttackRelease(freq, duration);
+            synth.triggerAttackAttackRelease(freq, duration);
         }
 
         // Plays the final end sound (triple high-pitched beep)
@@ -167,9 +175,9 @@
             if (!synth) return;
             const freq = parseFloat($('endFreq').value);
             const now = Tone.now();
-            synth.triggerAttackRelease(freq, "8n", now);
-            synth.triggerAttackRelease(freq, "8n", now + 0.4);
-            synth.triggerAttackRelease(freq * 1.5, "8n", now + 0.8); // Higher pitch for final
+            synth.triggerAttackAttackRelease(freq, "8n", now);
+            synth.triggerAttackAttackRelease(freq, "8n", now + 0.4);
+            synth.triggerAttackAttackRelease(freq * 1.5, "8n", now + 0.8); // Higher pitch for final
         }
 
 
