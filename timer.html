@@ -40,22 +40,30 @@
         .time-input {
             width: 100%;
             text-align: center;
-            appearance: textfield;
-            -moz-appearance: textfield;
+            /* Now type="text", but keep number field styles for consistency */
+            appearance: none; 
+            -moz-appearance: textfield; 
             border: 2px solid transparent;
-            background-color: #161b22;
+            background-color: #0d1117; 
             color: white;
             padding: 0.5rem;
             border-radius: 0.5rem;
             font-size: 1.125rem; /* text-lg */
         }
+        /* Hide spin buttons (though now text, keep for completeness on other browsers/inputs) */
+        .time-input::-webkit-outer-spin-button,
+        .time-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .time-input:focus {
             border-color: #38bdf8;
             outline: none;
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
         }
         .playback-select {
-            background-color: #161b22;
+            background-color: #0d1117; 
             border: 2px solid transparent;
             color: white;
             border-radius: 0.5rem;
@@ -77,33 +85,35 @@
 <body>
 
     <div id="app" class="w-full max-w-md bg-[#161b22] p-4 sm:p-6 rounded-2xl shadow-2xl border border-gray-700">
-        <h1 class="text-3xl font-bold text-center mb-5 text-fuchsia-400">Flow State Timer</h1>
+        <h1 class="text-3xl font-bold text-center mb-5 text-white">Flow State Timer</h1>
 
         <!-- Settings Section -->
         <div id="settings" class="space-y-4 mb-6">
-            <h2 class="text-xl font-semibold mb-3 text-gray-300">Session Setup (Minutes)</h2>
+            <h2 class="text-xl font-semibold mb-3 text-white">Interval Setup</h2>
 
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Flow Time Input -->
-                <div>
-                    <label for="flowTime" class="block text-sm font-medium text-gray-400">Flow Time (Minutes)</label>
-                    <input type="number" id="flowTime" value="25" min="1" max="180" class="time-input mt-1">
+            <!-- Left-aligned container for the Flow/Break inputs, limiting width to make them closer -->
+            <div class="grid grid-cols-2 gap-4 max-w-xs sm:max-w-sm">
+                <!-- Flow Time Input - Label above and centered -->
+                <div class="flex flex-col items-center">
+                    <label for="flowTime" class="block text-sm font-medium text-white mb-1">Flow</label>
+                    <!-- IMPORTANT: Changed type to "text" and added data-value for custom formatting -->
+                    <input type="text" id="flowTime" value="25 min" data-value="25" min="1" max="180" class="time-input">
                 </div>
 
-                <!-- Short Break Time Input -->
-                <div>
-                    <label for="breakTime" class="block text-sm font-medium text-gray-400">Short Break Time (Minutes)</label>
-                    <input type="number" id="breakTime" value="5" step="1" min="1" max="30" class="time-input mt-1">
+                <!-- Short Break Time Input - Label above and centered -->
+                <div class="flex flex-col items-center">
+                    <label for="breakTime" class="block text-sm font-medium text-white mb-1">Break</label>
+                    <!-- IMPORTANT: Changed type to "text" and added data-value for custom formatting -->
+                    <input type="text" id="breakTime" value="5 min" data-value="5" step="1" min="1" max="30" class="time-input">
                 </div>
             </div>
 
-            <h2 class="text-xl font-semibold pt-4 mb-3 text-gray-300">Sound Customization</h2>
-            <p class="text-sm text-gray-500">Customize the sound frequency (Hz) for each phase change and the background music speed.</p>
+            <h2 class="text-xl font-semibold pt-4 mb-3 text-white">Sound Customization</h2>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="text-center">
-                    <label for="playbackSpeed" class="block text-sm font-medium text-gray-400">Playback Speed</label>
-                    <select id="playbackSpeed" class="playback-select mt-1">
+                <div class="flex flex-col items-center">
+                    <label for="playbackSpeed" class="block text-sm font-medium text-white mb-1">Playback Speed</label>
+                    <select id="playbackSpeed" class="playback-select">
                         <option value="50">50%</option>
                         <option value="75">75%</option>
                         <option value="100" selected>100%</option>
@@ -111,29 +121,31 @@
                         <option value="150">150%</option>
                     </select>
                 </div>
-                <div class="text-center">
-                    <label for="flowFreq" class="block text-sm font-medium text-gray-400">Flow Start (Hz)</label>
-                    <input type="number" id="flowFreq" value="600" min="100" max="1000" class="time-input mt-1">
+                <!-- These remain type="number" as they don't require the "min" suffix -->
+                <div class="flex flex-col items-center">
+                    <label for="flowFreq" class="block text-sm font-medium text-white mb-1">Flow Start Hz</label>
+                    <input type="number" id="flowFreq" value="600" min="100" max="1000" class="time-input">
                 </div>
-                <div class="text-center">
-                    <label for="breakFreq" class="block text-sm font-medium text-gray-400">Break Start (Hz)</label>
-                    <input type="number" id="breakFreq" value="400" min="100" max="1000" class="time-input mt-1">
+                <div class="flex flex-col items-center">
+                    <label for="breakFreq" class="block text-sm font-medium text-white mb-1">Break Start Hz</label>
+                    <input type="number" id="breakFreq" value="400" min="100" max="1000" class="time-input">
                 </div>
-                <div class="text-center">
-                    <label for="endFreq" class="block text-sm font-medium text-gray-400">Final Countdown (Hz)</label>
-                    <input type="number" id="endFreq" value="800" min="100" max="1000" class="time-input mt-1">
+                <div class="flex flex-col items-center">
+                    <label for="endFreq" class="block text-sm font-medium text-white mb-1">Countdown Hz</label>
+                    <input type="number" id="endFreq" value="800" min="100" max="1000" class="time-input">
                 </div>
             </div>
             
             <div class="flex items-center pt-4">
                 <input type="checkbox" id="musicToggle" checked class="w-4 h-4 text-fuchsia-600 bg-gray-700 border-gray-600 rounded focus:ring-fuchsia-500">
-                <label for="musicToggle" class="ml-2 text-sm font-medium text-gray-300">Play Ambient Music during Flow Time</label>
+                <label for="musicToggle" class="ml-2 text-sm font-medium text-white">Ambient music</label>
             </div>
         </div>
 
         <!-- Timer Display (Padding reduced to p-4 for better mobile fit) -->
         <div id="timerDisplay" class="text-center bg-[#0d1117] p-4 rounded-xl shadow-inner border border-gray-700">
-            <div id="phaseText" class="text-2xl font-semibold mb-2 h-8 text-gray-400">Ready</div>
+            <!-- Initial text is handled by resetTimer function for color change -->
+            <div id="phaseText" class="text-2xl font-semibold mb-2 h-8 text-gray-500">Ready</div>
             <div class="text-lg font-medium text-fuchsia-500 mb-4 h-6 invisible">.</div> 
             <div id="countdown" class="timer-text text-white">00:00</div>
         </div>
@@ -157,6 +169,7 @@
         // *** Service Worker Registration for PWA functionality ***
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
+                // NOTE: This path MUST be correct. The service worker file must exist in the same directory.
                 navigator.serviceWorker.register('/service-worker.js') 
                     .then(registration => {})
                     .catch(error => {});
@@ -298,7 +311,7 @@
             const freq = parseFloat($('endFreq').value);
             const now = Tone.now();
             synth.triggerAttackRelease(freq, "8n", now);
-            synth.triggerAttackRelease(freq, "8n", now + 0.4);
+            synth.triggerAttackRelease(freq * 1.5, "8n", now + 0.4);
             synth.triggerAttackRelease(freq * 1.5, "8n", now + 0.8);
         }
         
@@ -329,19 +342,26 @@
 
             // Update color and text based on phase
             if (currentPhase === 'FLOW') {
-                timerDisplay.style.color = '#e879f9'; // Tailwind fuchsia-400
-                phaseText.textContent = 'FLOW TIME';
-                phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-fuchsia-400';
+                // Phase text: 'Flow' (white)
+                timerDisplay.style.color = '#ffffff'; // white
+                phaseText.textContent = 'Flow';
+                phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-white';
             } else if (currentPhase === 'BREAK') {
+                // Phase text: 'SHORT BREAK' (sky-400)
                 timerDisplay.style.color = '#38bdf8'; // Tailwind sky-400
                 phaseText.textContent = 'SHORT BREAK';
                 phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-sky-400';
             }
-
-            if (currentTime <= 3 && currentTime > 0 && isRunning) {
-                countdownDisplay.classList.add('text-red-500');
-            } else {
-                countdownDisplay.classList.remove('text-red-500');
+            
+            // Ensure countdown color is white during running phases (FLOW/BREAK)
+            if (!isPaused) {
+                countdownDisplay.classList.remove('text-amber-400');
+                // Countdown text is white by default in CSS, but this handles the 3-second flash
+                if (currentTime <= 3 && currentTime > 0 && isRunning) {
+                    countdownDisplay.classList.add('text-red-500');
+                } else {
+                    countdownDisplay.classList.remove('text-red-500');
+                }
             }
         }
 
@@ -350,15 +370,62 @@
             breakTimeInput.disabled = disabled;
             playbackSpeedInput.disabled = disabled; // Disable speed input while running
         }
+        
+        
+        // --- CUSTOM INPUT FORMATTING LOGIC ---
+        
+        function setupTimeInput(inputElement) {
+            const MIN_VAL = parseInt(inputElement.getAttribute('min'), 10);
+            const MAX_VAL = parseInt(inputElement.getAttribute('max'), 10);
+
+            // 1. Focus Handler: Show only the number
+            inputElement.addEventListener('focus', () => {
+                // Remove the ' min' suffix
+                inputElement.value = inputElement.getAttribute('data-value');
+            });
+
+            // 2. Blur Handler: Re-add the " min" suffix and validate
+            inputElement.addEventListener('blur', () => {
+                let numericValue = parseInt(inputElement.value.trim(), 10);
+
+                if (isNaN(numericValue) || numericValue < MIN_VAL) {
+                    numericValue = MIN_VAL;
+                } else if (numericValue > MAX_VAL) {
+                    numericValue = MAX_VAL;
+                }
+
+                // Update the hidden data-value with the validated number
+                inputElement.setAttribute('data-value', numericValue);
+                
+                // Update the visible value with the suffix
+                inputElement.value = `${numericValue} min`;
+                
+                // If it's the flow time input, reset the timer to update the total time
+                if (inputElement.id === 'flowTime' && !isRunning) {
+                    resetTimer();
+                }
+            });
+        }
+        
+        // Initialize custom behavior for the two minute inputs
+        setupTimeInput(flowTimeInput);
+        setupTimeInput(breakTimeInput);
 
 
         // --- TIMER LOGIC ---
 
+        // Helper function to safely read the time in minutes from the data-attribute
+        function getMinutes(inputElement) {
+            // Read the validated number stored in the data-value attribute
+            return parseInt(inputElement.getAttribute('data-value'), 10) || 0;
+        }
+
         function setPhase(phase) {
             currentPhase = phase;
             
-            const flowInSeconds = parseFloat(flowTimeInput.value) * 60;
-            const breakInSeconds = parseFloat(breakTimeInput.value) * 60;
+            // READ from data-value
+            const flowInSeconds = getMinutes(flowTimeInput) * 60;
+            const breakInSeconds = getMinutes(breakTimeInput) * 60;
 
             if (currentPhase === 'FLOW') {
                 currentTime = flowInSeconds;
@@ -394,6 +461,7 @@
             if (isPaused) return;
 
             if (currentTime <= 0) {
+                playEndTone(); // Play end tone when transitioning
                 nextPhase();
             } else {
                 currentTime--;
@@ -409,12 +477,17 @@
         // --- CONTROL FUNCTIONS ---
 
         function startTimer() {
-            const flowValue = parseFloat(flowTimeInput.value);
-            const breakValue = parseFloat(parseFloat(breakTimeInput.value));
+            const flowValue = getMinutes(flowTimeInput);
+            const breakValue = getMinutes(breakTimeInput);
 
             if (flowValue <= 0 || breakValue <= 0) {
+                // Using an internal console message instead of alert()
+                console.warn("Flow and Break times must be greater than 0."); 
                 return;
             }
+            
+            // Remove paused countdown color on start
+            countdownDisplay.classList.remove('text-amber-400');
             
             // Initialize audio: This forces the synth to be rebuilt with the new, scaled envelope times (in seconds)
             initializeAudio();
@@ -444,8 +517,14 @@
             isPaused = true;
             startButton.disabled = false;
             pauseButton.disabled = true;
-            phaseText.textContent = 'PAUSED';
-            phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-red-400';
+            
+            // Phase text color and text update
+            phaseText.textContent = 'Paused'; // Text changed to 'Paused'
+            phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-amber-400'; // Using amber-400 for consistency with pause button
+            
+            // Countdown number color change
+            countdownDisplay.classList.remove('text-red-500');
+            countdownDisplay.classList.add('text-amber-400'); 
             
             // PAUSE MUSIC LOGIC:
             if (musicToggle.checked && Tone.Transport.state === 'started') {
@@ -467,7 +546,8 @@
             // Hard stop music and reset transport state
             hardStopFlowMusic();
 
-            const initialFlowTimeSeconds = parseFloat(flowTimeInput.value) * 60 || 1500;
+            // Read the initial time from the data-value, not the visual value
+            const initialFlowTimeSeconds = getMinutes(flowTimeInput) * 60 || 1500;
             
             currentPhase = 'FLOW'; 
             currentTime = initialFlowTimeSeconds; 
@@ -476,8 +556,12 @@
             startButton.disabled = false;
             pauseButton.disabled = true;
             
+            // 'Ready' text color changed to gray-500
             phaseText.textContent = 'Ready';
-            phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-gray-400';
+            phaseText.className = 'text-2xl font-semibold mb-2 h-8 text-gray-500'; 
+            
+            // Ensure countdown is white
+            countdownDisplay.classList.remove('text-amber-400', 'text-red-500');
             countdownDisplay.textContent = formatTime(currentTime);
             
             // Re-initialize audio on reset to ensure correct settings are ready for the next start
@@ -498,5 +582,3 @@
     </script>
 </body>
 </html>
-
-
